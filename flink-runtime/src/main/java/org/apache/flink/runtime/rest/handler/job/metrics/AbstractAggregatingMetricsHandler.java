@@ -38,13 +38,15 @@ import org.apache.flink.util.Preconditions;
 
 import org.apache.flink.shaded.netty4.io.netty.handler.codec.http.HttpResponseStatus;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -120,48 +122,19 @@ public abstract class AbstractAggregatingMetricsHandler<
                                             .collect(Collectors.toList()));
                         }
 
-                        DoubleAccumulator.DoubleMinimumFactory minimumFactory = null;
-                        DoubleAccumulator.DoubleMaximumFactory maximumFactory = null;
-                        DoubleAccumulator.DoubleAverageFactory averageFactory = null;
-                        DoubleAccumulator.DoubleSumFactory sumFactory = null;
+                        Set<MetricsAggregationParameter.AggregationMode> requestedAggregationSet;
                         // by default we return all aggregations
                         if (requestedAggregations.isEmpty()) {
-                            minimumFactory = DoubleAccumulator.DoubleMinimumFactory.get();
-                            maximumFactory = DoubleAccumulator.DoubleMaximumFactory.get();
-                            averageFactory = DoubleAccumulator.DoubleAverageFactory.get();
-                            sumFactory = DoubleAccumulator.DoubleSumFactory.get();
+                            requestedAggregationSet =
+                                    new HashSet<>(
+                                            Arrays.asList(
+                                                    MetricsAggregationParameter.AggregationMode
+                                                            .values()));
                         } else {
-                            for (MetricsAggregationParameter.AggregationMode aggregation :
-                                    requestedAggregations) {
-                                switch (aggregation) {
-                                    case MIN:
-                                        minimumFactory =
-                                                DoubleAccumulator.DoubleMinimumFactory.get();
-                                        break;
-                                    case MAX:
-                                        maximumFactory =
-                                                DoubleAccumulator.DoubleMaximumFactory.get();
-                                        break;
-                                    case AVG:
-                                        averageFactory =
-                                                DoubleAccumulator.DoubleAverageFactory.get();
-                                        break;
-                                    case SUM:
-                                        sumFactory = DoubleAccumulator.DoubleSumFactory.get();
-                                        break;
-                                    default:
-                                        log.warn(
-                                                "Unsupported aggregation specified: {}",
-                                                aggregation);
-                                }
-                            }
+                            requestedAggregationSet = new HashSet<>(requestedAggregations);
                         }
-                        MetricAccumulatorFactory metricAccumulatorFactory =
-                                new MetricAccumulatorFactory(
-                                        minimumFactory, maximumFactory, averageFactory, sumFactory);
-
                         return getAggregatedMetricValues(
-                                stores, requestedMetrics, metricAccumulatorFactory);
+                                stores, requestedMetrics, requestedAggregationSet);
                     } catch (Exception e) {
                         log.warn("Could not retrieve metrics.", e);
                         throw new CompletionException(
@@ -195,13 +168,13 @@ public abstract class AbstractAggregatingMetricsHandler<
      *
      * @param stores available metrics
      * @param requestedMetrics ids of requested metrics
-     * @param requestedAggregationsFactories requested aggregations
+     * @param requestedAggregations requested aggregations
      * @return JSON string containing the requested metrics
      */
     private AggregatedMetricsResponseBody getAggregatedMetricValues(
             Collection<? extends MetricStore.ComponentMetricStore> stores,
             List<String> requestedMetrics,
-            MetricAccumulatorFactory requestedAggregationsFactories) {
+            Set<MetricsAggregationParameter.AggregationMode> requestedAggregations) {
 
         Collection<AggregatedMetric> aggregatedMetrics = new ArrayList<>(requestedMetrics.size());
         for (String requestedMetric : requestedMetrics) {
@@ -222,12 +195,9 @@ public abstract class AbstractAggregatingMetricsHandler<
                 continue;
             }
             if (!values.isEmpty()) {
-
-                Iterator<Double> valuesIterator = values.iterator();
                 MetricAccumulator acc =
-                        requestedAggregationsFactories.get(requestedMetric, valuesIterator.next());
-                valuesIterator.forEachRemaining(acc::add);
-
+                        new MetricAccumulator(requestedMetric, requestedAggregations);
+                values.forEach(acc::add);
                 aggregatedMetrics.add(acc.get());
             } else {
                 return new AggregatedMetricsResponseBody(Collections.emptyList());
@@ -236,80 +206,53 @@ public abstract class AbstractAggregatingMetricsHandler<
         return new AggregatedMetricsResponseBody(aggregatedMetrics);
     }
 
-    private static class MetricAccumulatorFactory {
-
-        @Nullable private final DoubleAccumulator.DoubleMinimumFactory minimumFactory;
-
-        @Nullable private final DoubleAccumulator.DoubleMaximumFactory maximumFactory;
-
-        @Nullable private final DoubleAccumulator.DoubleAverageFactory averageFactory;
-
-        @Nullable private final DoubleAccumulator.DoubleSumFactory sumFactory;
-
-        private MetricAccumulatorFactory(
-                @Nullable DoubleAccumulator.DoubleMinimumFactory minimumFactory,
-                @Nullable DoubleAccumulator.DoubleMaximumFactory maximumFactory,
-                @Nullable DoubleAccumulator.DoubleAverageFactory averageFactory,
-                @Nullable DoubleAccumulator.DoubleSumFactory sumFactory) {
-            this.minimumFactory = minimumFactory;
-            this.maximumFactory = maximumFactory;
-            this.averageFactory = averageFactory;
-            this.sumFactory = sumFactory;
-        }
-
-        MetricAccumulator get(String metricName, double init) {
-            return new MetricAccumulator(
-                    metricName,
-                    minimumFactory == null ? null : minimumFactory.get(init),
-                    maximumFactory == null ? null : maximumFactory.get(init),
-                    averageFactory == null ? null : averageFactory.get(init),
-                    sumFactory == null ? null : sumFactory.get(init));
-        }
-    }
-
     private static class MetricAccumulator {
         private final String metricName;
-
-        @Nullable private final DoubleAccumulator min;
-        @Nullable private final DoubleAccumulator max;
-        @Nullable private final DoubleAccumulator avg;
-        @Nullable private final DoubleAccumulator sum;
+        private final Set<MetricsAggregationParameter.AggregationMode> requestedAggregations;
+        private final DescriptiveStatistics descriptiveStatistics;
 
         private MetricAccumulator(
                 String metricName,
-                @Nullable DoubleAccumulator min,
-                @Nullable DoubleAccumulator max,
-                @Nullable DoubleAccumulator avg,
-                @Nullable DoubleAccumulator sum) {
+                Set<MetricsAggregationParameter.AggregationMode> requestedAggregations) {
             this.metricName = Preconditions.checkNotNull(metricName);
-            this.min = min;
-            this.max = max;
-            this.avg = avg;
-            this.sum = sum;
+            this.requestedAggregations = Preconditions.checkNotNull(requestedAggregations);
+            this.descriptiveStatistics = new DescriptiveStatistics();
         }
 
         void add(double value) {
-            if (min != null) {
-                min.add(value);
-            }
-            if (max != null) {
-                max.add(value);
-            }
-            if (avg != null) {
-                avg.add(value);
-            }
-            if (sum != null) {
-                sum.add(value);
-            }
+            descriptiveStatistics.addValue(value);
         }
 
         AggregatedMetric get() {
             return new AggregatedMetric(
                     metricName,
-                    min == null ? null : min.getValue(),
-                    max == null ? null : max.getValue(),
-                    avg == null ? null : avg.getValue(),
-                    sum == null ? null : sum.getValue());
+                    requestedAggregations.contains(MetricsAggregationParameter.AggregationMode.MIN)
+                            ? descriptiveStatistics.getMin()
+                            : null,
+                    requestedAggregations.contains(MetricsAggregationParameter.AggregationMode.MAX)
+                            ? descriptiveStatistics.getMax()
+                            : null,
+                    requestedAggregations.contains(MetricsAggregationParameter.AggregationMode.AVG)
+                            ? descriptiveStatistics.getMean()
+                            : null,
+                    requestedAggregations.contains(MetricsAggregationParameter.AggregationMode.SUM)
+                            ? descriptiveStatistics.getSum()
+                            : null,
+                    requestedAggregations.contains(MetricsAggregationParameter.AggregationMode.P50)
+                            ? descriptiveStatistics.getPercentile(0.5)
+                            : null,
+                    requestedAggregations.contains(MetricsAggregationParameter.AggregationMode.P90)
+                            ? descriptiveStatistics.getPercentile(0.9)
+                            : null,
+                    requestedAggregations.contains(MetricsAggregationParameter.AggregationMode.P95)
+                            ? descriptiveStatistics.getPercentile(0.95)
+                            : null,
+                    requestedAggregations.contains(MetricsAggregationParameter.AggregationMode.P99)
+                            ? descriptiveStatistics.getPercentile(0.99)
+                            : null,
+                    requestedAggregations.contains(MetricsAggregationParameter.AggregationMode.P999)
+                            ? descriptiveStatistics.getPercentile(0.999)
+                            : null);
         }
     }
 }

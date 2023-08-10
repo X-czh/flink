@@ -43,6 +43,16 @@ public class AggregatedMetric {
 
     private static final String FIELD_NAME_SUM = "sum";
 
+    private static final String FIELD_NAME_P50 = "p50";
+
+    private static final String FIELD_NAME_P90 = "p90";
+
+    private static final String FIELD_NAME_P95 = "p95";
+
+    private static final String FIELD_NAME_P99 = "p99";
+
+    private static final String FIELD_NAME_P999 = "p999";
+
     @JsonProperty(value = FIELD_NAME_ID, required = true)
     private final String id;
 
@@ -62,23 +72,53 @@ public class AggregatedMetric {
     @JsonProperty(FIELD_NAME_SUM)
     private final Double sum;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty(FIELD_NAME_P50)
+    private final Double p50;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty(FIELD_NAME_P90)
+    private final Double p90;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty(FIELD_NAME_P95)
+    private final Double p95;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty(FIELD_NAME_P99)
+    private final Double p99;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty(FIELD_NAME_P999)
+    private final Double p999;
+
     @JsonCreator
     public AggregatedMetric(
             final @JsonProperty(value = FIELD_NAME_ID, required = true) String id,
             final @Nullable @JsonProperty(FIELD_NAME_MIN) Double min,
             final @Nullable @JsonProperty(FIELD_NAME_MAX) Double max,
             final @Nullable @JsonProperty(FIELD_NAME_AVG) Double avg,
-            final @Nullable @JsonProperty(FIELD_NAME_SUM) Double sum) {
+            final @Nullable @JsonProperty(FIELD_NAME_SUM) Double sum,
+            final @Nullable @JsonProperty(FIELD_NAME_P50) Double p50,
+            final @Nullable @JsonProperty(FIELD_NAME_P90) Double p90,
+            final @Nullable @JsonProperty(FIELD_NAME_P95) Double p95,
+            final @Nullable @JsonProperty(FIELD_NAME_P99) Double p99,
+            final @Nullable @JsonProperty(FIELD_NAME_P999) Double p999) {
 
         this.id = requireNonNull(id, "id must not be null");
         this.min = min;
         this.max = max;
         this.avg = avg;
         this.sum = sum;
+        this.p50 = p50;
+        this.p90 = p90;
+        this.p95 = p95;
+        this.p99 = p99;
+        this.p999 = p999;
     }
 
     public AggregatedMetric(final @JsonProperty(value = FIELD_NAME_ID, required = true) String id) {
-        this(id, null, null, null, null);
+        this(id, null, null, null, null, null, null, null, null, null);
     }
 
     @JsonIgnore
@@ -106,6 +146,31 @@ public class AggregatedMetric {
         return avg;
     }
 
+    @JsonIgnore
+    public Double getP50() {
+        return p50;
+    }
+
+    @JsonIgnore
+    public Double getP90() {
+        return p90;
+    }
+
+    @JsonIgnore
+    public Double getP95() {
+        return p95;
+    }
+
+    @JsonIgnore
+    public Double getP99() {
+        return p99;
+    }
+
+    @JsonIgnore
+    public Double getP999() {
+        return p999;
+    }
+
     @Override
     public String toString() {
         return "AggregatedMetric{"
@@ -123,6 +188,21 @@ public class AggregatedMetric {
                 + '\''
                 + ", sum='"
                 + sum
+                + '\''
+                + ", p50='"
+                + p50
+                + '\''
+                + ", p90='"
+                + p90
+                + '\''
+                + ", p95='"
+                + p95
+                + '\''
+                + ", p99='"
+                + p99
+                + '\''
+                + ", p999='"
+                + p999
                 + '\''
                 + '}';
     }

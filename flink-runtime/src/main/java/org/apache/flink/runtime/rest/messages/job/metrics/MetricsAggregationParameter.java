@@ -59,6 +59,11 @@ public class MetricsAggregationParameter
         MIN,
         MAX,
         SUM,
-        AVG
+        AVG,
+        P50,
+        P90,
+        P95,
+        P99,
+        P999
     }
 }
