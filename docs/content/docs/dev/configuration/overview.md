@@ -228,7 +228,7 @@ In case of Table API programs, you will also need `flink-table-runtime` and `fli
 
 As a rule of thumb, we **suggest** packaging the application code and all its required dependencies into one fat/uber JAR.
 This includes packaging connectors, formats, and third-party dependencies of your job.
-This rule **does not apply** to Java APIs, DataStream Scala APIs, and the aforementioned runtime modules, 
+This rule **does not apply** to Java APIs and the aforementioned runtime modules, 
 which are already provided by Flink itself and **should not** be included in a job uber JAR.
 This job JAR can be submitted to an already running Flink cluster, or added to a Flink application
 container image easily without modifying the distribution.
