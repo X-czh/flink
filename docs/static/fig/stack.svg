@@ -111,26 +111,6 @@ under the License.
        style="font-size:22.505608px;fill:#000000;font-style:normal;font-weight:normal;text-align:start;text-anchor:start;font-family:Verdana;"
        id="text24">Flink Common API / Optimizer</text>
     <path
-       style="fill:#93cddd;fill-rule:evenodd;fill-opacity:1;stroke:none;"
-       d="  M 498.23662 106.86412   C 498.23662 102.73809 501.57495 99.399763 505.70098 99.399763   L 618.37905 99.399763   C 622.50508 99.399763 625.84341 102.73809 625.84341 106.86412   L 625.84341 136.72156   C 625.84341 140.84759 622.50508 144.18592 618.37905 144.18592   L 505.70098 144.18592   C 501.57495 144.18592 498.23662 140.84759 498.23662 136.72156   z"
-       id="path26" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:2.5131261px;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;"
-       d="  M 498.23662 106.86412   C 498.23662 102.73809 501.57495 99.399763 505.70098 99.399763   L 618.37905 99.399763   C 622.50508 99.399763 625.84341 102.73809 625.84341 106.86412   L 625.84341 136.72156   C 625.84341 140.84759 622.50508 144.18592 618.37905 144.18592   L 505.70098 144.18592   C 501.57495 144.18592 498.23662 140.84759 498.23662 136.72156   z"
-       id="path28" />
-    <text
-       xml:space="preserve"
-       x="508.83228"
-       y="130.71455"
-       style="font-size:22.505608px;fill:#000000;font-style:normal;font-weight:normal;text-align:start;text-anchor:start;font-family:Verdana;"
-       id="text30">Scala</text>
-    <text
-       xml:space="preserve"
-       x="576.94925"
-       y="130.71455"
-       style="font-size:22.505608px;fill:#000000;font-style:normal;font-weight:normal;text-align:start;text-anchor:start;font-family:Verdana;"
-       id="text32">API</text>
-    <path
        style="fill:#ffffff;fill-rule:evenodd;fill-opacity:1;stroke:none;"
        d="  M 637.69637 106.90163   C 637.69637 102.7756 641.0347 99.399763 645.16073 99.399763   L 774.83053 99.399763   C 778.95656 99.399763 782.3324 102.7756 782.3324 106.90163   L 782.3324 136.8716   C 782.3324 141.03514 778.95656 144.37347 774.83053 144.37347   L 645.16073 144.37347   C 641.0347 144.37347 637.69637 141.03514 637.69637 136.8716   z"
        id="path34" />
@@ -474,58 +454,12 @@ under the License.
        style="fill:none;stroke:#000000;stroke-width:1.8754672px;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;"
        d="  M 396.07992 45.405062   L 422.63654 45.405062  "
        id="path188" />
-    <path
-       style="fill:#ffffff;fill-rule:evenodd;fill-opacity:1;stroke:none;"
-       d="  M 539.19683 12.88446   L 581.73242 12.88446   L 581.73242 55.420057   L 574.64316 62.509323   L 539.19683 62.509323  z "
-       id="path190" />
-    <path
-       style="fill:#cdcdcd;fill-rule:evenodd;fill-opacity:1;stroke:none;"
-       d="  M 574.64316 62.509323   L 576.06851 56.826657   L 581.73242 55.420057  z "
-       id="path192" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:1.2565631px;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;"
-       d="  M 574.64316 62.509323   L 576.06851 56.826657   L 581.73242 55.420057   L 574.64316 62.509323   L 539.19683 62.509323   L 539.19683 12.88446   L 581.73242 12.88446   L 581.73242 55.420057  "
-       id="path194" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:1.8754672px;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;"
-       d="  M 544.52315 17.385581   L 571.09852 17.385581  "
-       id="path196" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:1.8754672px;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;"
-       d="  M 544.52315 21.905457   L 576.42485 21.905457  "
-       id="path198" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:1.8754672px;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;"
-       d="  M 544.52315 26.406579   L 565.79095 26.406579  "
-       id="path200" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:1.8754672px;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;"
-       d="  M 544.52315 30.926455   L 576.42485 30.926455  "
-       id="path202" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:1.8754672px;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;"
-       d="  M 544.52315 35.427576   L 576.42485 35.427576  "
-       id="path204" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:1.8754672px;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;"
-       d="  M 544.52315 39.947452   L 557.82022 39.947452  "
-       id="path206" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:1.8754672px;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;"
-       d="  M 544.54191 44.448573   L 571.09852 44.448573  "
-       id="path208" />
     <text
        xml:space="preserve"
        x="364.78497"
        y="80.72277"
        style="font-size:13.803439px;fill:#000000;font-style:normal;font-weight:normal;text-align:start;text-anchor:start;font-family:Verdana;"
        id="text210">Java Program</text>
-    <text
-       xml:space="preserve"
-       x="512.48505"
-       y="81.674089"
-       style="font-size:13.803439px;fill:#000000;font-style:normal;font-weight:normal;text-align:start;text-anchor:start;font-family:Verdana;"
-       id="text212">Scala Program</text>
     <path
        style="fill:#9bbb59;fill-rule:evenodd;fill-opacity:1;stroke:none;"
        d="  M 203.20687 48.968449   L 203.20687 56.620356   L 223.62133 56.620356   L 223.62133 48.968449   L 203.20687 48.968449  z "

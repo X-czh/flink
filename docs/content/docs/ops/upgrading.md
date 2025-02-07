@@ -32,7 +32,7 @@ This document describes how to update a Flink streaming application and how to m
 
 ## API compatibility guarantees
 
-The classes & members of the Java/Scala APIs that are intended for users are annotated with the following stability annotations:
+The classes & members of the Java APIs that are intended for users are annotated with the following stability annotations:
 * `Public`
 * `PublicEvolving`
 * `Experimental`

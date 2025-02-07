@@ -32,7 +32,7 @@ Flink DataStream 程序通常设计为长时间运行，例如数周、数月甚
 
 ## API compatibility guarantees
 
-The classes & methods of the Java/Scala APIs that are intended for users are annotated with the following stability annotations:
+The classes & methods of the Java APIs that are intended for users are annotated with the following stability annotations:
 * `Public`
 * `PublicEvolving`
 * `Experimental`
